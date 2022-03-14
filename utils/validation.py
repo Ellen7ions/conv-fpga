@@ -17,6 +17,15 @@ def val(trace, sample):
     else:
         print(f"error total: {error_cnt}")
 
+def show(conv, filter_img):
+    my_filter = np.array([filter_img])
+    my_filter = my_filter.reshape(conv.shape)
+
+    cv2.imshow('ground-truth', conv / 255)
+    cv2.imshow('my-filter', my_filter / 255)
+
+    cv2.waitKey(0)
+
 if __name__ == '__main__':
     gray = cv2.imread('../img/icon_gray.png', cv2.IMREAD_GRAYSCALE)
     kernel = np.array([
@@ -44,4 +53,7 @@ if __name__ == '__main__':
             counter += 1
 
     val(weights, filter_img)
+    
+    show(conv, filter_img)
+    
         
