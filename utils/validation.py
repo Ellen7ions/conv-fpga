@@ -26,13 +26,18 @@ def show(conv, filter_img):
 
     cv2.waitKey(0)
 
+def get_kernel():
+    ker = []
+    with open('../tb/kernel_weights.txt', 'r') as fp:
+        lines = fp.readlines()
+        for line in lines:
+            ker.append(eval(line))
+    ks = int(np.sqrt(len(ker)))
+    return np.array([ker]).reshape((ks, ks))
+
 if __name__ == '__main__':
     gray = cv2.imread('../img/icon_gray.png', cv2.IMREAD_GRAYSCALE)
-    kernel = np.array([
-        [0, 1, 0],
-        [1, 4, 1],
-        [0, 1, 0]
-    ])
+    kernel = get_kernel()
 
     k_size = 3
     n, _ = gray.shape
