@@ -1,5 +1,5 @@
 module conv_top #(
-    parameter N             = 4,
+    parameter N             = 16,
     parameter DATA_WIDTH    = 16,
     parameter K_SIZE        = 3
 ) (
@@ -44,14 +44,11 @@ module conv_top #(
                     valid_o <= 1'b1;
                 end
 
-                if (addra == N * N) begin
+                if (addra == (N - K_SIZE + 1) * (N - K_SIZE + 1) + (N - K_SIZE) * (K_SIZE - 1) + K_SIZE * K_SIZE + (K_SIZE - 1) * (N - K_SIZE)) begin
+                    valid_o <= 1'b0;
                     ena <= 1'b0;
                 end
-
-                if (addra == (N - K_SIZE + 1) * (N - K_SIZE + 1) + K_SIZE * K_SIZE + (K_SIZE - 1) * (N - K_SIZE)) begin
-                    valid_o <= 1'b0;
-                end
-            end else if (addra != N * N) begin
+            end else if (addra == 14'b0) begin
                 ena <= 1'b1;
             end
         end
