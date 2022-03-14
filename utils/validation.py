@@ -21,6 +21,8 @@ def show(conv, filter_img):
     my_filter = np.array([filter_img])
     my_filter = my_filter.reshape(conv.shape)
 
+    cv2.namedWindow('ground-truth', cv2.WINDOW_NORMAL)
+    cv2.namedWindow('my-filter', cv2.WINDOW_NORMAL)
     cv2.imshow('ground-truth', conv / 255 / 9)
     cv2.imshow('my-filter', my_filter / 255 / 9)
 

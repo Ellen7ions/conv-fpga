@@ -1,5 +1,5 @@
 module conv_top #(
-    parameter N             = 16,
+    parameter N             = 100,
     parameter DATA_WIDTH    = 16,
     parameter K_SIZE        = 3
 ) (
