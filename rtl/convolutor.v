@@ -1,6 +1,7 @@
 module convolutor #(
     parameter N             = 4,
     parameter DATA_WIDTH    = 16,
+    parameter Q             = 5,
     parameter K_SIZE        = 3
 ) (
     input   wire                        clk,
@@ -20,7 +21,10 @@ module convolutor #(
 
     genvar i;
     generate
-        unit u0 (
+        unit #(
+            .DATA_WIDTH(DATA_WIDTH),
+            .Q(Q)
+        ) u0 (
             .clk        (clk                ),
             .rst        (rst                ),
             .en         (en                 ),
@@ -32,7 +36,10 @@ module convolutor #(
 
         for (i = 1; i < K_SIZE * K_SIZE; i = i + 1) begin: units
             if (i % K_SIZE == 0) begin
-                unit u (
+                unit #(
+                    .DATA_WIDTH(DATA_WIDTH),
+                    .Q(Q)
+                ) u (
                     .clk        (clk                    ),
                     .rst        (rst                    ),
                     .en         (en                     ),
@@ -42,7 +49,10 @@ module convolutor #(
                     .result     (units_result[i     ]   )
                 );    
             end else begin
-                unit u (
+                unit #(
+                    .DATA_WIDTH(DATA_WIDTH),
+                    .Q(Q)
+                ) u (
                     .clk        (clk                    ),
                     .rst        (rst                    ),
                     .en         (en                     ),

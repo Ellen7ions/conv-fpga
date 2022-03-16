@@ -1,6 +1,7 @@
 module conv_top #(
     parameter N             = 4,
     parameter DATA_WIDTH    = 16,
+    parameter Q             = 5,
     parameter K_SIZE        = 3
 ) (
     input   wire            clk,
@@ -24,6 +25,7 @@ module conv_top #(
     convolutor #(
         .N          (N          ),
         .DATA_WIDTH (DATA_WIDTH ),
+        .Q          (Q          ),
         .K_SIZE     (K_SIZE     )
     ) conv_inst (
         .clk    (clk    ),

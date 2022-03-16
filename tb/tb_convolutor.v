@@ -5,7 +5,9 @@ module tb_convolutor ();
     wire valid_o, running_o;
 
     conv_top #(
-        .N(100)
+        .N          (100    ),
+        .DATA_WIDTH (16     ),
+        .Q          (0      )
     ) top_inst (
         .clk        (clk    ),
         .rst        (rst    ),
