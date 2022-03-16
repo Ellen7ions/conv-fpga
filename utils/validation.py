@@ -53,11 +53,7 @@ if __name__ == '__main__':
         nums = fp.readlines()
 
         for i, line in enumerate(nums):
-            if counter < n - k_size + 1:
-                filter_img.append(eval(line))
-            elif counter == n - 1:
-                counter = -1
-            counter += 1
+            filter_img.append(eval(line))
 
     val(weights, filter_img)
     
