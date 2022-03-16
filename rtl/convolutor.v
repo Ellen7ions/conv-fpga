@@ -80,5 +80,5 @@ module convolutor #(
     endgenerate
 
     assign data_o = units_result[K_SIZE * K_SIZE - 1];
-    
+
 endmodule
