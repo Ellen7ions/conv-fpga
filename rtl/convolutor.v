@@ -16,7 +16,7 @@ module convolutor #(
     reg     [DATA_WIDTH - 1: 0] shift_regs      [K_SIZE - 2: 0][N - K_SIZE - 1: 0];
 
     initial begin
-        $readmemh("C:/Users/Ellen7ions/Desktop/conv_fpga/tb/kernel_weights.txt", kernel);
+        $readmemb("C:/Users/Ellen7ions/Desktop/conv_fpga/tb/kernel_weights.txt", kernel);
     end
 
     genvar i;

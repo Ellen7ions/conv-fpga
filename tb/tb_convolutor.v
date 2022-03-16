@@ -7,7 +7,7 @@ module tb_convolutor ();
     conv_top #(
         .N          (100    ),
         .DATA_WIDTH (16     ),
-        .Q          (0      )
+        .Q          (5      )
     ) top_inst (
         .clk        (clk    ),
         .rst        (rst    ),
@@ -32,11 +32,15 @@ module tb_convolutor ();
         #25 rst = 1'b0;
     end
 
+    integer i = 0;
     always @(posedge clk) begin
         if (rst) begin
         end else begin
             if (running_o && valid_o) begin
-                $fwrite(fp, "%d\n", data_o);
+                // for (i = 15; i >= 0; i = i - 1) begin
+                //     $fwrite(fp, "%d", data_o[i]);    
+                // end
+                $fwrite(fp, "%b\n", data_o);
                 $display("%d\n", data_o);
             end
         end
