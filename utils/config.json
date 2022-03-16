@@ -1,4 +1,4 @@
 {
-    "DATA_WIDTH"    : 16,
-    "Q"             : 5  
+    "DATA_WIDTH"    : 32,
+    "Q"             : 10  
 }

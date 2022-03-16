@@ -4,16 +4,16 @@ module conv_top #(
     parameter Q             = 5,
     parameter K_SIZE        = 3
 ) (
-    input   wire            clk,
-    input   wire            rst,
-    output  wire [15: 0]    data_o,
-    output  reg             valid_o,
-    output  wire            running_o
+    input   wire                        clk,
+    input   wire                        rst,
+    output  wire [DATA_WIDTH - 1: 0]    data_o,
+    output  reg                         valid_o,
+    output  wire                        running_o
 );
 
-    reg     [13: 0] addra;
-    wire    [15: 0] douta;
-    reg             ena;
+    reg [13             : 0]    addra;
+    wire[DATA_WIDTH - 1 : 0]    douta;
+    reg                         ena;
 
     img_block img_inst (
         .clka   (clk    ),      // input wire clka

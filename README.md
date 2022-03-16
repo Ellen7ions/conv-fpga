@@ -6,7 +6,7 @@ The primary idea behind the approach to this design is to build a highly pipelin
 
 ### Fixed Point Arithmetic
 
-I use a fixed-point library from [here](https://opencores.org/projects/fixed_point_arithmetic_parameterized).
+I used a fixed-point library from [here](https://opencores.org/projects/fixed_point_arithmetic_parameterized).
  
 
 ### REFERENCE

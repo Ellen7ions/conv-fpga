@@ -1,13 +1,16 @@
 module tb_convolutor ();
+    localparam N            = 100;
+    localparam DATA_WIDTH   = 32;
+    localparam Q            = 10;
     reg clk;
     reg rst;
-    wire [15: 0] data_o;
+    wire [DATA_WIDTH - 1: 0] data_o;
     wire valid_o, running_o;
 
     conv_top #(
-        .N          (100    ),
-        .DATA_WIDTH (16     ),
-        .Q          (5      )
+        .N          (N          ),
+        .DATA_WIDTH (DATA_WIDTH ),
+        .Q          (Q          )
     ) top_inst (
         .clk        (clk    ),
         .rst        (rst    ),
