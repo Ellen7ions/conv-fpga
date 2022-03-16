@@ -3,8 +3,8 @@ from cv2 import sqrt
 import numpy as np
 import argparse	
 
-def convert_img_coe():
-    N = 100
+
+def convert_img_coe(N):
     img = cv2.imread('../img/icon.png')
     gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
     gray = cv2.resize(gray, (N, N))
@@ -26,11 +26,11 @@ def convert_kernel(kernel):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()	
-    parser.add_argument('--img', action='store_true', default=False, help='covert a image to gray map')
+    parser.add_argument('--img', type=int, default=False, help='covert a image to NxN gray map')
     parser.add_argument('--ker', type=int, nargs='+', help='covert a kernel to gray map')
     args = parser.parse_args()
     if args.img:
-        convert_img_coe()
+        convert_img_coe(args.img)
         print("img finished!")
     elif args.ker:
         print(args.ker)
