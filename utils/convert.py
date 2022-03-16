@@ -3,6 +3,7 @@ from cv2 import sqrt
 import numpy as np
 import argparse	
 
+import json
 
 def convert_img_coe(N):
     img = cv2.imread('../img/icon.png')
@@ -10,19 +11,41 @@ def convert_img_coe(N):
     gray = cv2.resize(gray, (N, N))
     cv2.imwrite('../img/icon_gray.png', gray)
     img = gray
-    file = open("../tb/img_data.coe", "w");
-    file.write("memory_initialization_radix=16;\n")
+    file = open("../tb/img_data.coe", "w")
+    file.write("memory_initialization_radix=2;\n")
     file.write("memory_initialization_vector=\n")
     h, w = img.shape
-    for i in range(h):
-        for j in range(w):
-            file.write(f"00{str(hex(img[i][j]))[2:]}\n")
+
+    with open('config.json', 'r') as fp:
+        cfg = json.load(fp)
+        total = cfg['DATA_WIDTH']
+        dec_cnt = cfg['Q']
+        i_cnt = total - 1 -dec_cnt
+    
+        for i in range(h):
+            for j in range(w):
+                bin_s = str(bin(img[i][j]))[2:]
+
+                for _ in range(i_cnt + 1 - len(bin_s)):
+                    file.write("0")
+
+                file.write(f"{bin_s}")
+                
+                for _ in range(dec_cnt):
+                    file.write("0")
+                file.write("\n")
 
 
 def convert_kernel(kernel):
-    with open('../tb/kernel_weights.txt', "w") as fp:
-        for i in kernel:
-            fp.write(f"{i}\n")
+    from fix_float import float2fix
+    with open('config.json', 'r') as fp:
+        cfg = json.load(fp)
+        total = cfg['DATA_WIDTH']
+        dec_cnt = cfg['Q']
+        i_cnt = total - 1 -dec_cnt
+        with open('../tb/kernel_weights.txt', "w") as fp:
+            for i in kernel:
+                fp.write(f"{float2fix(i, i_cnt, dec_cnt)}\n")
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()	
