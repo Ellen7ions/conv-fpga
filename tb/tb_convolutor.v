@@ -2,13 +2,16 @@ module tb_convolutor ();
     reg clk;
     reg rst;
     wire [15: 0] data_o;
-    wire ok;
+    wire valid_o, running_o;
 
-    conv_top top_inst (
-        .clk    (clk    ),
-        .rst    (rst    ),
-        .data_o (data_o ),
-        .valid_o(ok     )
+    conv_top #(
+        .N(100)
+    ) top_inst (
+        .clk        (clk    ),
+        .rst        (rst    ),
+        .data_o     (data_o ),
+        .valid_o    (valid_o),
+        .running_o  (running_o)
     );
     
     integer fp;
@@ -30,7 +33,7 @@ module tb_convolutor ();
     always @(posedge clk) begin
         if (rst) begin
         end else begin
-            if (ok) begin
+            if (running_o && valid_o) begin
                 $fwrite(fp, "%d\n", data_o);
                 $display("%d\n", data_o);
             end
@@ -44,11 +47,11 @@ module tb_convolutor ();
         end else begin
             case (cur)
                 2'b00: begin
-                    if (ok) cur <= 2'b10;
+                    if (running_o) cur <= 2'b10;
                 end
                 
                 2'b10: begin
-                    if (~ok) begin
+                    if (~running_o) begin
                         $fclose(fp);
                         $finish;
                     end
