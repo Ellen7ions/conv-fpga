@@ -58,7 +58,8 @@ if __name__ == '__main__':
     k_size = 3
     n, _ = gray.shape
 
-    conv = strideConv(gray,kernel,1)
+    conv = strideConv(gray, kernel, 1)
+    conv = strideConv(conv, kernel, 1)
     # print(conv)
     weights = conv.flatten().tolist()
     filter_img = []

@@ -64,7 +64,9 @@ module conv_top #(
                     o_counter <= 1'b1;
                 end
 
-                if (o_ena & valid_i) begin
+                if (~valid_i) begin
+                    valid_o <= 1'b0;
+                end else if (o_ena & valid_i) begin
                     o_counter <= o_counter + 16'b1;
                     if (o_counter < N - K_SIZE + 1) begin
                         valid_o <= 1'b1;
