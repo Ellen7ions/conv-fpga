@@ -33,8 +33,8 @@ def show(conv, filter_img):
 
     cv2.namedWindow('ground-truth', cv2.WINDOW_NORMAL)
     cv2.namedWindow('my-filter', cv2.WINDOW_NORMAL)
-    cv2.imshow('ground-truth', conv / 255 / 9)
-    cv2.imshow('my-filter', my_filter / 255 / 9)
+    cv2.imshow('ground-truth', conv)
+    cv2.imshow('my-filter', my_filter)
 
     cv2.waitKey(0)
 

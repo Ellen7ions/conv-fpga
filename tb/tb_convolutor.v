@@ -7,6 +7,17 @@ module tb_convolutor ();
     wire [DATA_WIDTH - 1: 0] data_o;
     wire valid_o, running_o;
 
+    reg ena;
+    reg valid_i;
+    reg [13             : 0]    addra;
+    wire[DATA_WIDTH - 1 : 0]    douta;
+    img_block img_inst (
+        .clka   (clk    ),      // input wire clka
+        .ena    (ena    ),      // input wire ena
+        .addra  (addra  ),      // input wire [13 : 0] addra
+        .douta  (douta  )       // output wire [15 : 0] douta
+    );
+
     conv_top #(
         .N          (N          ),
         .DATA_WIDTH (DATA_WIDTH ),
@@ -14,6 +25,9 @@ module tb_convolutor ();
     ) top_inst (
         .clk        (clk    ),
         .rst        (rst    ),
+        .ena        (ena    ),
+        .data_i     (douta  ),
+        .valid_i    (addra != 14'b0),
         .data_o     (data_o ),
         .valid_o    (valid_o),
         .running_o  (running_o)
@@ -32,13 +46,36 @@ module tb_convolutor ();
 
     initial begin
         rst = 1'b1;
-        #25 rst = 1'b0;
+        ena = 1'b0;
+        #25 begin
+            rst = 1'b0;
+        end
+
+        // #25 ena = 1'b0;
     end
+
+    reg finished;
 
     integer i = 0;
     always @(posedge clk) begin
         if (rst) begin
+            addra <= 14'b0;
+            valid_i <= 1'b1;
+            ena <= 1'b0;
+
+            finished <= 1'b0;
         end else begin
+
+            if (ena && addra != N * N + 1)
+                addra <= addra + 14'b1;
+
+            if (!finished && addra == N * N) begin
+                ena <= 1'b0;
+                finished <= 1'b1;
+            end else if (!finished) begin
+                ena <= 1'b1;
+            end
+
             if (running_o && valid_o) begin
                 // for (i = 15; i >= 0; i = i - 1) begin
                 //     $fwrite(fp, "%d", data_o[i]);    

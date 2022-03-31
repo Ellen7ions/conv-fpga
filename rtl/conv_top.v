@@ -6,21 +6,26 @@ module conv_top #(
 ) (
     input   wire                        clk,
     input   wire                        rst,
+    input   wire                        ena,
+    input   wire [DATA_WIDTH - 1: 0]    data_i,
+    input   wire                        valid_i,
+
     output  wire [DATA_WIDTH - 1: 0]    data_o,
     output  reg                         valid_o,
     output  wire                        running_o
 );
 
     reg [13             : 0]    addra;
-    wire[DATA_WIDTH - 1 : 0]    douta;
-    reg                         ena;
+    // wire[DATA_WIDTH - 1 : 0]    douta;
+    reg                         ena_reg;
 
-    img_block img_inst (
-        .clka   (clk    ),      // input wire clka
-        .ena    (ena    ),      // input wire ena
-        .addra  (addra  ),      // input wire [13 : 0] addra
-        .douta  (douta  )       // output wire [15 : 0] douta
-    );
+    // drop
+    // img_block img_inst (
+    //     .clka   (clk    ),      // input wire clka
+    //     .ena    (ena    ),      // input wire ena
+    //     .addra  (addra  ),      // input wire [13 : 0] addra
+    //     .douta  (douta  )       // output wire [15 : 0] douta
+    // );
 
     convolutor #(
         .N          (N          ),
@@ -28,11 +33,11 @@ module conv_top #(
         .Q          (Q          ),
         .K_SIZE     (K_SIZE     )
     ) conv_inst (
-        .clk    (clk    ),
-        .rst    (rst    ),
-        .en     (ena    ),
-        .data_i (douta  ),
-        .data_o (data_o )
+        .clk    (clk                ),
+        .rst    (rst                ),
+        .en     ((ena_reg | ena) & valid_i),
+        .data_i (data_i             ),
+        .data_o (data_o             )
     );
 
 
@@ -43,20 +48,23 @@ module conv_top #(
         if (rst) begin
             addra       <= 14'b0;
             valid_o     <= 1'b0;
-            ena         <= 1'b0;
+            ena_reg     <= 1'b0;
             
             o_ena       <= 1'b0;
             o_counter   <= 16'b0;
         end else begin
-            if (ena) begin
-                addra <= addra + 14'b1;
-                if (addra == K_SIZE * K_SIZE + (K_SIZE - 1) * (N - K_SIZE)) begin
+            if (ena_reg | ena) begin
+                if (valid_i) begin
+                    addra <= addra + 14'b1;
+                end
+
+                if (addra == K_SIZE * K_SIZE + (K_SIZE - 1) * (N - K_SIZE) - 1) begin
                     valid_o <= 1'b1;
                     o_ena   <= 1'b1;
                     o_counter <= 1'b1;
                 end
 
-                if (o_ena) begin
+                if (o_ena & valid_i) begin
                     o_counter <= o_counter + 16'b1;
                     if (o_counter < N - K_SIZE + 1) begin
                         valid_o <= 1'b1;
@@ -69,17 +77,23 @@ module conv_top #(
                     end
                 end
 
-                if (addra == (N - K_SIZE + 1) * (N - K_SIZE + 1) + (N - K_SIZE) * (K_SIZE - 1) + K_SIZE * K_SIZE + (K_SIZE - 1) * (N - K_SIZE)) begin
+                if (addra == 
+                    (N - K_SIZE + 1) * (N - K_SIZE + 1) + 
+                    (N - K_SIZE) * (K_SIZE - 1) + 
+                    K_SIZE * K_SIZE + (K_SIZE - 1) * (N - K_SIZE) - 1) begin
                     valid_o <= 1'b0;
-                    ena <= 1'b0;
+                    ena_reg <= 1'b0;
                     o_ena <= 1'b0;
+                    addra <= 14'b0;
                 end
-            end else if (addra == 14'b0) begin
-                ena <= 1'b1;
+            end
+
+            if (ena) begin
+                ena_reg <= 1'b1;
             end
         end
     end
 
-    assign running_o = ena;
+    assign running_o = ena_reg | ena;
 
 endmodule
